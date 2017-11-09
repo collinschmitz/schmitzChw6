@@ -30,11 +30,13 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id){
         Log.d(TAG, "onListItemClick position=" + position + " id=" + id + " " + RECIPES[position]);
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("RecipeName", RECIPES[position].getName());
         intent.putExtra("RecipeDirections", RECIPES[position].getDirections());
-        intent.putExtra("RatingIcon", RECIPES[position].getRating());
+        intent.putExtra("RatingIcon", Recipe.getIconResource(RECIPES[position].getRating()));
         intent.putExtra("RecipeTags", RECIPES[position].getTags());
+
+        startActivity(intent);
     }
 
     class RecipeAdapter extends BaseAdapter {
@@ -56,11 +58,22 @@ public class MainActivity extends ListActivity {
             }
             ImageView icon = row.findViewById(R.id.image);
             TextView name = row.findViewById(R.id.text1);
-            TextView description = row.findViewById(R.id.text2);
+            TextView tags = row.findViewById(R.id.text2);
 
             Recipe recipe = RECIPES[position];
             name.setText(recipe.getName());
-            description.setText(recipe.getDirections());
+            String displayString = "";
+            int count = 0;
+            while(count < recipe.getTags().size()){
+                if (!displayString.isEmpty()) {
+                    displayString = displayString + ", " + recipe.getTags().get(count);
+                }
+                else{
+                    displayString = recipe.getTags().get(count);
+                }
+                count ++;
+            }
+            tags.setText(displayString);
             icon.setImageResource(Recipe.getIconResource(recipe.getRating()));
 
             return row;
@@ -69,7 +82,8 @@ public class MainActivity extends ListActivity {
 
     private static ArrayList <String > rec1 = new ArrayList<String>(Arrays.asList("Chicken", "Easy", "Main Dish", "Lemon", "Healthy"));
     private static ArrayList <String > rec2 = new ArrayList<String>(Arrays.asList("Chicken", "Lemon", "Main Dish", "Italian"));
-    private static ArrayList <String > rec3 = new ArrayList<String>(Arrays.asList("Italian", "Pasta", "Lemon", "Shrimp", "Main Dish"))
+    private static ArrayList <String > rec3 = new ArrayList<String>(Arrays.asList("Italian", "Pasta", "Lemon", "Shrimp", "Main Dish"));
+    /*private static ArrayList <String > rec1 = new ArrayList<String>(Arrays.asList("Chicken", "Easy", "Main Dish", "Lemon", "Healthy"))
     private static ArrayList <String > rec1 = new ArrayList<String>(Arrays.asList("Chicken", "Easy", "Main Dish", "Lemon", "Healthy"))
     private static ArrayList <String > rec1 = new ArrayList<String>(Arrays.asList("Chicken", "Easy", "Main Dish", "Lemon", "Healthy"))
     private static ArrayList <String > rec1 = new ArrayList<String>(Arrays.asList("Chicken", "Easy", "Main Dish", "Lemon", "Healthy"))
@@ -81,7 +95,7 @@ public class MainActivity extends ListActivity {
     private static ArrayList <String > rec1 = new ArrayList<String>(Arrays.asList("Chicken", "Easy", "Main Dish", "Lemon", "Healthy"))
     private static ArrayList <String > rec1 = new ArrayList<String>(Arrays.asList("Chicken", "Easy", "Main Dish", "Lemon", "Healthy"))
     private static ArrayList <String > rec1 = new ArrayList<String>(Arrays.asList("Chicken", "Easy", "Main Dish", "Lemon", "Healthy"))
-    private static ArrayList <String > rec1 = new ArrayList<String>(Arrays.asList("Chicken", "Easy", "Main Dish", "Lemon", "Healthy"))
+    */
 
     private static final Recipe[] RECIPES = {
             new Recipe("Lemon Chicken Breasts",
@@ -98,10 +112,5 @@ public class MainActivity extends ListActivity {
                     "Drizzle some oil in a large pot of boiling salted water, add 1 tablespoon of salt...",
                     rec3,
                     Recipe.Rating.two),
-
-            "Lemon-Garlic Shrimp and Grits", "Roman-Style Chicken", "Zucchini Parmesan Crips",
-            "Chicken Enchiladas", "Garlic Roasted Potatoes", "Twice-Baked Potatoes",
-            "Tomato Soup", "Salmon Baked in Foil", "Baked Shrimp Scampi", "Baked Ziti",
-            "Chicken-Fried Steak with Gravy", "Guacamole"
     };
 }
